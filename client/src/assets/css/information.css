@@ -1,0 +1,61 @@
+body {
+    background-color: white;
+}
+
+.content-info {
+    background-color: white;
+    color: black;
+    padding-top: 5rem;
+    font-size: 1.2rem;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#avatar {
+    width: 15rem;
+    height: 15rem;
+    margin-bottom:2rem;
+    margin-left: 2rem;
+    margin-top: 2rem;
+    background-image: url(../img/avatar.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border:1mm solid grey;
+    border-radius: 2mm;
+
+}
+
+button {
+    width: 10rem;
+}
+.detail-info {
+    margin-left: 1rem;
+}
+.attention {
+    color: red;
+}
+.deconnect-but{
+    background-color: gray;
+    font-size: 1rem;
+    width: 10rem;
+    height: 5rem;
+}
+.deconnect-container{
+    text-align: center;
+}
+.attention button {
+    background-color: red;
+}
+
+@media screen and (max-width: 400px) {
+    .content-info{
+        font-size: 1.2rem;
+    }
+    #avatar-container{
+        text-align: center;
+    }
+    #avatar {
+       width: 10rem;
+       height: 10rem;
+    }
+  }

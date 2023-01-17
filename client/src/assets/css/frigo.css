@@ -1,0 +1,42 @@
+#frigo_main {
+    position: relative;
+    top: 5rem;
+    left: 2rem;
+    
+  }
+
+#frigo_main h1 {
+    color: rgb(148, 139, 101);
+}
+
+.frigo_button{
+    margin: 1em;
+    width: 7rem;
+    height: 3rem;
+    text-align: center;
+    background-color: beige;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: 900;
+    border-radius: 5%;
+}
+
+.frigo_button:hover{
+    background-color: blanchedalmond;
+}
+
+.temp {
+    top: 10rem;
+    padding: 0;
+    margin: 1em;
+    width: 7rem;
+    height: 3rem;
+    text-align: left;
+
+}
+
+
+#metrics{
+     color: rgb(99, 81, 81);
+     font-weight: 800;
+     right: 5rem;
+}

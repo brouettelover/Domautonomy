@@ -1,0 +1,45 @@
+.main {
+    top: 4rem;
+    position: relative;
+    width: 30rem;
+    left: 20rem;
+
+}
+span.addmodule {
+    font-size: larger;
+}
+summary.addmodule {
+    padding: 1.2rem;
+    font-size: large;
+}
+div.addmodule{
+    padding: 0.3rem;
+}
+label.addmodule {
+    color: lightslategray;
+}
+input[type="radio"].addmodule {
+    margin: 0;
+    font: inherit;
+    color: lightslategray;
+    width: 1.15em;
+    height: 1.15em;
+    border: 0.15em solid lightslategray;
+    border-radius: 50%;
+    margin-left: 1rem;
+  }
+hr.addmodule {
+    margin: 1rem;
+    padding: 1px;
+}
+button.addmodule{
+    width: 10rem;
+    text-align: center;
+    height: 5rem;
+    font-size: large;
+    background-color: lightblue;
+    margin-left: 12rem;
+}
+button.addmodule:hover {
+    background-color: lightcyan;
+}

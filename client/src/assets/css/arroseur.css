@@ -1,0 +1,23 @@
+#arroseur_main{
+    position: relative;
+    top: 26rem;
+    left: 1rem;
+    }
+
+.arroseur_button{
+    background-color: rgb(163, 199, 199);
+    padding: 2rem;
+    margin: 1rem;
+}
+
+#arroseur_texte{
+    font-size: large;
+}
+
+#arroseur_main h1 {
+    color: cadetblue;
+}
+
+#arroseur_main hr {
+    width: 22rem;
+}

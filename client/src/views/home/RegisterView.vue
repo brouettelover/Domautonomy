@@ -35,7 +35,7 @@ export default {
   methods: {
     async registerUser () {
       try {
-        axios.post('/api/register', {
+        axios.post('https://domautonomy.one:3100/api/register', {
           name: this.register.username,
           email: this.register.email,
           password: this.register.password

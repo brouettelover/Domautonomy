@@ -9,7 +9,6 @@ router.use(function(req, res, next){
 });
 
 router.use("/", require("./login"));
-router.use("/root", require("./root"));
 router.use("/modules",require("./modules"));
 
 module.exports = router;

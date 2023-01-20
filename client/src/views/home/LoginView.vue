@@ -38,7 +38,7 @@ export default {
   methods: {
     async loginUser () {
       try {
-        axios.post('/api/login', {
+        axios.post('https://domautonomy.one:3100/api/login', {
           email: this.email,
           password: this.password
         })

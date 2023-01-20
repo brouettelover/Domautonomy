@@ -68,7 +68,7 @@ export default {
     },
     async getUserInfo () {
       try {
-        axios.get('/api/me')
+        axios.get('https://domautonomy.one:3100/api/me', { timeout: 50 })
           .then(response => {
             this.username = response.data.userDetails.name
             if (!this.username) {
@@ -76,10 +76,12 @@ export default {
               this.$router.push('/')
             }
           }).catch(e => {
-            this.localStorage.removeItem('jwt')
+            localStorage.removeItem('jwt')
+            this.$router.push('/')
           })
       } catch (err) {
-        this.localStorage.removeItem('jwt')
+        localStorage.removeItem('jwt')
+        this.$router.push('/')
         console.log(err.response)
       }
     }

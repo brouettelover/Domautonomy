@@ -31,6 +31,7 @@
 </style>
 <script>
 import axios from 'axios'
+// import io from 'socket.io-client'
 
 export default {
   name: 'FrigoComp',
@@ -40,26 +41,8 @@ export default {
       humidity: 'NONE'
     }
   },
-
-  created () {
-    setInterval(() => {
-      axios
-        .get('/api/modules/frigo/Temperature')
-        .then(temperature => {
-          this.temperature = temperature.data.temperature
-        })
-        .catch(error => {
-          console.log(error)
-        })
-      axios
-        .get('/api/modules/frigo/Humidity')
-        .then(humidity => {
-          this.humidity = humidity.data.humidity
-        })
-        .catch(error => {
-          console.log(error)
-        })
-    }, 3000)
+  mounted () {
+    // this.socketInstance = io('https://domautonomy.one:3100/socket.io')
   },
   methods: {
     async OpenTheBox () {

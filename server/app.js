@@ -7,8 +7,14 @@ const morgan = require('morgan');
 const winston = require('./params/log');
 var cors = require("cors");
 const helmet = require("helmet");
-const { Server } = require('socket.io')
-const http = require('http')
+const https = require('https');
+const fs = require('fs');
+
+// Configuration HTTPS
+const options = {
+  cert: fs.readFileSync('./certs/https/fullchain.pem'),
+  key: fs.readFileSync('./certs/https/privkey.pem')
+};
 
 // Configuration du port de l'api
 var port = process.env.PORT;
@@ -37,14 +43,30 @@ mongoose
     winston.err({ database_error: err})
   });
   
-app.use(cors())
+app.use(cors({
+  origin: ['https://domautonomy.one', 'https://192.168.0.150'],
+  methods: ['GET', 'POST', 'PUT'],
+  allowedHeaders: ['Content-Type', 'Authorization','x-access-token','Access-Control-Allow-Origin']
+}))
 
 // routes
 app.use("/api", require("./routes"));
 
 //lancement du serveur
-app.listen(port, "0.0.0.0", function () {
-    console.log('App listening on port ' + port + '! Go to http:82.212.158.9/')
+// const server = app.listen(port, "0.0.0.0", function () {
+//     console.log('App listening on port ' + port + '! Go to http:82.212.158.9/')
+//   })
+const server = https.createServer(options, app).listen(port);
+
+const io = require('socket.io')(server);
+
+io.on('connection', (socket) => {
+  console.log(socket.id)
+
+  socket.on('message', data => {
+    socket.broadcast.emit('message:received', data)
   })
+
+});
 
 module.exports = app

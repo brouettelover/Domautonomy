@@ -42,7 +42,7 @@ export default {
     }
   },
   mounted () {
-    // this.socketInstance = io('https://domautonomy.one:3100/socket.io')
+  // this.socketInstance = io('https://domautonomy.one:3100/socket.io')
   },
   methods: {
     async OpenTheBox () {

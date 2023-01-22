@@ -9,6 +9,7 @@ var cors = require("cors");
 const helmet = require("helmet");
 const https = require('https');
 const fs = require('fs');
+var auth = require("./auth/auth")
 
 // Configuration HTTPS
 const options = {
@@ -53,14 +54,12 @@ app.use(cors({
 app.use("/api", require("./routes"));
 
 //lancement du serveur
-// const server = app.listen(port, "0.0.0.0", function () {
-//     console.log('App listening on port ' + port + '! Go to http:82.212.158.9/')
-//   })
 const server = https.createServer(options, app).listen(port);
 
+// WebSocket Serveur
 const io = require('socket.io')(server);
 
-io.on('connection', (socket) => {
+io.on('connection', auth.verifyToken, (socket) => {
   console.log(socket.id)
 
   socket.on('message', data => {

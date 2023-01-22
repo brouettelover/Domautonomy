@@ -68,7 +68,7 @@ export default {
     },
     async getUserInfo () {
       try {
-        axios.get('https://domautonomy.one:3100/api/me', { timeout: 50 })
+        axios.get('https://domautonomy.one:3100/api/me', { timeout: 1000 })
           .then(response => {
             this.username = response.data.userDetails.name
             if (!this.username) {

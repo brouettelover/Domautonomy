@@ -1,6 +1,5 @@
 //Import des dépendances
 var express = require("express");
-var path = require("path");
 var mongoose = require("mongoose");
 var params = require("./params/params");
 const morgan = require('morgan');
@@ -54,18 +53,28 @@ app.use(cors({
 app.use("/api", require("./routes"));
 
 //lancement du serveur
-const server = https.createServer(options, app).listen(port);
+const server = https.createServer(options, app);
 
 // WebSocket Serveur
-const io = require('socket.io')(server);
+const { Server } = require("socket.io");
+const io = new Server(server);
 
-io.on('connection', auth.verifyToken, (socket) => {
-  console.log(socket.id)
+io.on('connection', (socket) => {
+  
+  console.log('a user connected');
+  io.emit('temperature', 'Temperature');
+  io.emit('humidity', 'Humidity');
 
-  socket.on('message', data => {
-    socket.broadcast.emit('message:received', data)
-  })
-
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+  
 });
+
+server.listen(port), () => {
+  console.log("Server listenning on " + port);
+}
+
+
 
 module.exports = app

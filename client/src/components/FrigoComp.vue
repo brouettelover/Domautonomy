@@ -31,7 +31,7 @@
 </style>
 <script>
 import axios from 'axios'
-// import io from 'socket.io-client'
+import SocketioService from '@/services/socketio.service.ts'
 
 export default {
   name: 'FrigoComp',
@@ -41,8 +41,11 @@ export default {
       humidity: 'NONE'
     }
   },
-  mounted () {
-  // this.socketInstance = io('https://domautonomy.one:3100/socket.io')
+  created () {
+    SocketioService.setupSocketConnection()
+  },
+  beforeUnmount () {
+    SocketioService.disconnect()
   },
   methods: {
     async OpenTheBox () {

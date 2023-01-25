@@ -44,20 +44,20 @@
    <button class="btn btn-outline-info" v-on:click="AddAlarm">Ajout Alarme</button>
   </span>
    <hr>
-  <table class="table table-dark">
+  <table class="table table-dark" v-if="tableVisibility">
     <thead>
       <tr>
-        <th scope="col">#</th>
-        <th scope="col">Start</th>
-        <th scope="col">End</th>
+        <th scope="col">TempMin</th>
+        <th scope="col">TempMax</th>
+        <th scope="col">HumidityMax</th>
         <th scope="col">Remove</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <th scope="row">1</th>
-        <td>0°</td>
-        <td>7°</td>
+        <th scope="row">{{ alarms.TempMin }}</th>
+        <td>{{ alarms.TempMax }}</td>
+        <td>{{ alarms.HumidityMax }}</td>
         <td><button class="btn btn-outline-danger" v-on:click="removeAlarm">Remove</button></td>
       </tr>
     </tbody>
@@ -79,10 +79,17 @@ export default {
       TempMin: null,
       HumidityMax: null,
       temperature: 'NONE',
-      humidity: 'NONE'
+      humidity: 'NONE',
+      tableVisibility: false,
+      alarms: {
+        TempMin: null,
+        TempMax: null,
+        HumidityMax: null
+      }
     }
   },
   created () {
+    this.getAlarms()
     SocketioService.setupSocketConnection()
     this.socket = SocketioService.socket
     this.socket.on('temperature', (data) => {
@@ -136,7 +143,7 @@ export default {
           HumidityMax: this.HumidityMax
         })
           .then(response => {
-            this.$swal('Success', 'Alarm Ajouté', 'Success')
+            location.reload()
           })
           .catch(e => {
             this.$swal('Error', 'Something Went Wrong', 'error')
@@ -148,14 +155,31 @@ export default {
     },
     async removeAlarm () {
       try {
-        axios.post('/api/modules/frigo/removeAlarm', {
+        axios.post('https://domautonomy.one:3100/api/modules/frigo/RemoveAlarmTempHum', {
+          TempMin: this.alarms.TempMin
         })
           .then(response => {
-            this.$swal('Success', 'Alarm Supprimé', 'Success')
+            location.reload()
           })
           .catch(e => {
             this.$swal('Error', 'Something Went Wrong', 'error')
           })
+      } catch (err) {
+        this.$swal('Error', 'Something Went Wrong', 'error')
+        console.log(err.response)
+      }
+    },
+    async getAlarms () {
+      try {
+        axios.get('https://domautonomy.one:3100/api/modules/frigo/AlarmTempHum', {
+        }).then(response => {
+          this.alarms.TempMax = response.data.TempMax[0]
+          this.alarms.TempMin = response.data.TempMin[0]
+          this.alarms.HumidityMax = response.data.HumidityMax[0]
+          if (response.data.TempMax[0]) { this.tableVisibility = true }
+        }).catch(e => {
+          this.$swal('Error', 'Something Went Wrong', 'error')
+        })
       } catch (err) {
         this.$swal('Error', 'Something Went Wrong', 'error')
         console.log(err.response)

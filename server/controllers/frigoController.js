@@ -1,8 +1,9 @@
 const fs = require('fs');
 const mqtt = require('mqtt');
-const transporter = require('../params/mail')
+const mailController = require("./mailController");
 const winston = require('../params/log');
 const User = require("../models/User");
+const AlarmTempHum = require("../models/AlarmTempHum")
 const validator = require('validator');
 
 
@@ -11,6 +12,8 @@ exports.AddCard = async (req, res) => {}
 exports.AddAlarm = async (req, res) => {}
 exports.TemperatureData = async () => {}
 exports.HumidityData = async () => {}
+exports.AlarmTempHum = async (req, res) => {}
+exports.RemoveAlarmTempHum = async (req, res) => {}
 
 const options = {
     clientId: `mqtt_${Math.random().toString(16).slice(3)}`,
@@ -40,19 +43,44 @@ exports.AddCard = async (req, res) => {
         res.status(200).json({ 'state':"something went wrong" });
     }
 }
-
-let TempMin = -15
-let TempMax = 15
-let HumidityMax = 95
 exports.AddAlarmTempHum = async (req, res) => {
+    let TempMin = validator.escape(req.body.TempMin)
+    let TempMax = validator.escape(req.body.TempMax)
+    let HumidityMax = validator.escape(req.body.HumidityMax)
+
     try {
-        TempMin = validator.escape(req.body.TempMin);
-        TempMax = validator.escape(req.body.TempMax);
-        HumidityMax = validator.escape(req.body.HumidityMax);
+        const alarmtemphum = new AlarmTempHum({
+            TempMin: TempMin,
+            TempMax: TempMax,
+            HumidityMax: HumidityMax
+        })
+        let data = await alarmtemphum.save()
         res.status(200).json({'TempMin': TempMin, 'TempMax': TempMax, 'HumidityMax': HumidityMax})
     } catch (e) {
         console.error(e)
         res.status(400).json({ "error": e });
+    }
+}
+exports.AlarmTempHum = async (req, res) => {
+    try{
+        AlarmTempHum.find({}, (err, alarms) => {
+            let tempMins = alarms.map(alarm => alarm.TempMin);
+            let tempMax = alarms.map(alarm => alarm.TempMax);
+            let humidityMax = alarms.map(alarm => alarm.HumidityMax);
+            res.status(200).json({'TempMin': tempMins, 'TempMax': tempMax, 'HumidityMax': humidityMax})
+        })
+    } catch (e) {
+            res.status(400).json({'error':e})
+    }
+}
+exports.RemoveAlarmTempHum = async (req, res) => {
+    try{
+        let TempMinAlarm = req.body.TempMin
+        await AlarmTempHum.deleteOne({'TempMin': TempMinAlarm });
+        res.status(200).json({'AlarmIsRemoved': true})
+        res.status(400).json({'error': e})
+    } catch (e) {
+        res.status(400).json({'error': e})
     }
 }
 exports.TemperatureData = () => {
@@ -62,9 +90,13 @@ exports.TemperatureData = () => {
             if (topic !== "temperature") { return }
             let temperatureData = message.toString('ascii');
             client.unsubscribe('temperature');
-            if(temperatureData >= TempMax || temperatureData <= TempMin){
-                transporter.sendAlarmTemperatureMail(User.mail, temperatureData)
-            }
+            AlarmTempHum.find({}, (err, alarms) => {
+                User.find({}, (err,users) => {
+                if(temperatureData >= alarms.TempMax || temperatureData <= alarms.TempMin){
+                    mailController.sendAlarmTemperatureMail(users.mail, temperatureData)
+                    }
+                })
+            })
             resolve(temperatureData);
         });
     });
@@ -76,9 +108,13 @@ exports.HumidityData = () => {
             if (topic !== "humidity") { return }
             let humidityData = message.toString('ascii');
             client.unsubscribe('humidity');
-            if(humidityData >= HumidityMax){
-                transporter.sendAlarmHumidityMail(User.mail, humidityData)
-            }
+            AlarmTempHum.find({}, (err, alarms) => {
+                User.find({}, (err,users) => {
+                    if(humidityData >= alarms.HumidityMax){
+                        mailController.sendAlarmHumidityMail(users.mail, humidityData)
+                    }
+                })
+            })
             resolve(humidityData);
         });
     });

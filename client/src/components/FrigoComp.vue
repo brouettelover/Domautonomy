@@ -14,7 +14,7 @@
     <span class="input-group-prepend">
       <label class="input-group-text" for="inputGroupSelect01">Min</label>
     </span>
-    <select class="custom-select" id="inputGroupSelect01">
+    <select class="custom-select" id="inputGroupSelect01" v-model="TempMin">
       <option selected>Choose...</option>
       <option value="0">0</option>
       <option value="1">1</option>
@@ -23,11 +23,23 @@
     <span class="input-group-prepend">
       <label class="input-group-text" for="inputGroupSelect01">Max</label>
     </span>
-    <select class="custom-select" id="inputGroupSelect01">
+    <select class="custom-select" id="inputGroupSelect01" v-model="TempMax">
       <option selected>Choose...</option>
+      <option value="5">5</option>
+      <option value="6">6</option>
+      <option value="7">7</option>
       <option value="8">8</option>
       <option value="9">9</option>
       <option value="10">10</option>
+    </select>
+    <span class="input-group-prepend">
+      <label class="input-group-text" for="inputGroupSelect01">Max Humidité</label>
+    </span>
+    <select class="custom-select" id="inputGroupSelect01" v-model="HumidityMax">
+      <option selected>Choose...</option>
+      <option value="60">60</option>
+      <option value="80">80</option>
+      <option value="90">90</option>
     </select>
    <button class="btn btn-outline-info" v-on:click="AddAlarm">Ajout Alarme</button>
   </span>
@@ -63,12 +75,22 @@ export default {
   name: 'FrigoComp',
   data () {
     return {
+      TempMax: null,
+      TempMin: null,
+      HumidityMax: null,
       temperature: 'NONE',
       humidity: 'NONE'
     }
   },
   created () {
     SocketioService.setupSocketConnection()
+    this.socket = SocketioService.socket
+    this.socket.on('temperature', (data) => {
+      this.temperature = data
+    })
+    this.socket.on('humidity', (data) => {
+      this.humidity = data
+    })
   },
   beforeUnmount () {
     SocketioService.disconnect()
@@ -76,7 +98,7 @@ export default {
   methods: {
     async OpenTheBox () {
       try {
-        axios.get('/api/modules/frigo/open', {
+        axios.get('https://domautonomy.one:3100/api/modules/frigo/open', {
 
         })
           .then(response => {
@@ -92,7 +114,7 @@ export default {
     },
     async AddCard () {
       try {
-        axios.get('/api/modules/frigo/addCard', {
+        axios.get('https://domautonomy.one:3100/api/modules/frigo/addCard', {
 
         })
           .then(response => {
@@ -108,9 +130,10 @@ export default {
     },
     async AddAlarm () {
       try {
-        axios.post('/api/modules/frigo/addAlarm', {
+        axios.post('https://domautonomy.one:3100/api/modules/frigo/AddAlarmTempHum', {
           TempMin: this.TempMin,
-          tempMax: this.TempMax
+          TempMax: this.TempMax,
+          HumidityMax: this.HumidityMax
         })
           .then(response => {
             this.$swal('Success', 'Alarm Ajouté', 'Success')

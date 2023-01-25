@@ -44,7 +44,17 @@ exports.sendAlarmTemperatureMail = (email, temperature) => {
         winston.info({info});
     }).catch(console.error);
 }
-
+exports.sendAlarmHumidityMail = (email, humidity) => {
+    transporter.sendMail({
+        from: '"Project autonomy" <project.autonomy.app@gmail.com>', // sender address
+        to: email, // list of receivers
+        subject: "Alarme Humidité détecté sur le Frigo", // Subject line
+        text: "L'Humidité détectée à déclenché l'alarme. Humidité :" + humidity, // plain text body
+        html: "L'Humidité détectée à déclenché l'alarme. Humidité :" + humidity, // html body
+    }).then(info => {
+        winston.info({info});
+    }).catch(console.error);
+}
 exports.sendAlarmLockerMail = (email) => {
     transporter.sendMail({
         from: '"Project autonomy" <project.autonomy.app@gmail.com>', // sender address

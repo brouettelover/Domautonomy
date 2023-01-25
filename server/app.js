@@ -9,6 +9,7 @@ const helmet = require("helmet");
 const https = require('https');
 const fs = require('fs');
 var auth = require("./auth/auth")
+const frigoController = require("./controllers/frigoController")
 
 // Configuration HTTPS
 const options = {
@@ -59,11 +60,12 @@ const server = https.createServer(options, app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 
-io.on('connection', (socket) => {
-  
-  console.log('a user connected');
-  io.emit('temperature', 'Temperature');
-  io.emit('humidity', 'Humidity');
+io.on('connection', async (socket) => {
+  console.log("user is on")
+  temperature = await frigoController.TemperatureData();
+  humidity = await frigoController.HumidityData();
+  io.emit('temperature', 'temperature');
+  io.emit('humidity', 'humidity');
 
   socket.on('disconnect', () => {
     console.log('user disconnected');

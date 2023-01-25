@@ -3,18 +3,18 @@ const mqtt = require('mqtt');
 const transporter = require('../params/mail')
 const winston = require('../params/log');
 const User = require("../models/User");
-const { cli } = require('winston/lib/winston/config');
-const { time } = require('console');
+const validator = require('validator');
 
-exports.OpenTheCase = async (req, res) => {};
-exports.AddCard = async (req, res) => {};
-exports.ShowCurrentTemperature = async (req, res) => {};
-exports.ShowCurrentHumidity = async (req, res) => {};
-exports.SetAlarm = async (req, res) => {};
-exports.AlarmIsOn = async (req, res) => {};
+
+exports.OpenTheCase = async (req, res) => {}
+exports.AddCard = async (req, res) => {}
+exports.AddAlarm = async (req, res) => {}
+exports.TemperatureData = async () => {}
+exports.HumidityData = async () => {}
 
 const options = {
-    clientId: 'backendserver1032',
+    clientId: `mqtt_${Math.random().toString(16).slice(3)}`,
+    clean: true,
     key: fs.readFileSync('./certs/mqtt_cert/client.key'),
     cert: fs.readFileSync('./certs/mqtt_cert/client.crt'),
     ca: [ fs.readFileSync('./certs/mqtt_cert/ca.crt') ]
@@ -31,7 +31,6 @@ exports.OpenTheCase = async (req, res) => {
         res.status(200).json({ 'state':"something went wrong" });
     }
 }
-
 exports.AddCard = async (req, res) => {
     try {
         client.publish('RFID', 'RFID_ADD');
@@ -41,48 +40,66 @@ exports.AddCard = async (req, res) => {
         res.status(200).json({ 'state':"something went wrong" });
     }
 }
-let temperatureData = null;
-// Function to update temperatureData
-function updateTemperatureData() {
-    client.subscribe('temperature');
-    client.on('message', (topic, message, packet) => {
-        if (topic !== "temperature") { return }
-        temperatureData = message.toString('ascii');
-        client.unsubscribe('temperature');
+
+let TempMin = -15
+let TempMax = 15
+let HumidityMax = 95
+exports.AddAlarmTempHum = async (req, res) => {
+    try {
+        TempMin = validator.escape(req.body.TempMin);
+        TempMax = validator.escape(req.body.TempMax);
+        HumidityMax = validator.escape(req.body.HumidityMax);
+        res.status(200).json({'TempMin': TempMin, 'TempMax': TempMax, 'HumidityMax': HumidityMax})
+    } catch (e) {
+        console.error(e)
+        res.status(400).json({ "error": e });
+    }
+}
+exports.TemperatureData = () => {
+    return new Promise((resolve, reject) => {
+        client.subscribe('temperature');
+        client.once('message', (topic, message, packet) => {
+            if (topic !== "temperature") { return }
+            let temperatureData = message.toString('ascii');
+            client.unsubscribe('temperature');
+            if(temperatureData >= TempMax || temperatureData <= TempMin){
+                transporter.sendAlarmTemperatureMail(User.mail, temperatureData)
+            }
+            resolve(temperatureData);
+        });
     });
 }
-let humidityData = null;
-function updateHumidityData() {
-    client.subscribe('humidity');
+exports.HumidityData = () => {
+    return new Promise((resolve, reject) => {
+        client.subscribe('humidity');
+        client.once('message', (topic, message, packet) => {
+            if (topic !== "humidity") { return }
+            let humidityData = message.toString('ascii');
+            client.unsubscribe('humidity');
+            if(humidityData >= HumidityMax){
+                transporter.sendAlarmHumidityMail(User.mail, humidityData)
+            }
+            resolve(humidityData);
+        });
+    });
+}
+exports.SendAlarmMail = async () => {
+    client.subscribe('RFID');
     client.on('message', (topic, message, packet) => {
-        if (topic !== "humidity") { return }
-        humidityData = message.toString('ascii');
-        client.unsubscribe('humidity');
+        if (topic !== "RFID") { return }
+        let RFIDData = message.toString('ascii')
+        if (RFIDData === 'alarm'){
+            SendEmailEvery24H()
+        }
+        client.unsubscribe('RFID')
+        return
     });
 }
 
-// Start interval to update temperatureData every 60 seconds
-setInterval(updateTemperatureData, 1000);
-setInterval(updateHumidityData, 1000);
-
-exports.ShowCurrentTemperature = async (req, res) => {
-    try {
-        res.status(200).json({ 'temperature': temperatureData });
-    }
-    catch (e) {
-        res.status(200).json({ 'state': "something went wrong" });
-    }
-    return
-}
-
-exports.ShowCurrentHumidity = async (req, res) => {
-    try {
-        res.status(200).json({ 'humidity': humidityData });
-    }
-    catch (e) {
-        res.status(200).json({ 'state': "something went wrong" });
-    }
-    return
+// Function to be executed every 24 hours
+function SendEmailEvery24H() {
+    transporter.SendAlarmLockerMail(User.mail)
+    setTimeout(repeatAction, 24 * 60 * 60 * 1000);
 }
 
 // exports.AlarmIsOn = async () => {

@@ -1,23 +1,23 @@
 #arroseur_main{
+    text-align: left;
     position: relative;
-    top: 26rem;
-    left: 1rem;
+    margin: 1rem;
+    border: 5px solid;
+    border-radius: 30px;
+    padding: 5px;
+    background-color: rgba(249, 250, 240, 0.822);
+    border-color: rgb(100, 188, 6);
     }
 
-.arroseur_button{
-    background-color: rgb(163, 199, 199);
-    padding: 2rem;
-    margin: 1rem;
-}
-
-#arroseur_texte{
-    font-size: large;
-}
-
 #arroseur_main h1 {
-    color: cadetblue;
+    color: rgb(100, 188, 6);
 }
 
-#arroseur_main hr {
-    width: 22rem;
+.water_btn {
+    margin-left: -4px;
+    z-index: 3;
+}
+
+.water_input {
+    z-index: 5;
 }

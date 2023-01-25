@@ -1,29 +1,55 @@
 <template>
    <div id="frigo_main">
-    <h1>Frigo</h1>
+    <h1 class="display-4">Frigo</h1>
     <div id="metrics">
         Température : {{ temperature }} °
         <br />
         Humidité : {{ humidity }} %
     </div>
-   <button class="frigo_button" >Ajout carte RFID</button>
-   <button class="frigo_button" v-on:click="OpenTheBox">Ouverture à distance</button>
-   <br>
-   <!-- <label for="Temperature-Minimal"  class="temp">Temperature-Minimal:</label>
-   <select name="Temperature-Minimal" v-model="TempMin" class="temp">
-    <option value="0">0</option>
-    <option value="2">2</option>
-    <option value="4">4</option>
-   </select>
-   <label for="Temperature-Maximal" class="temp">Temperature-Maximal:</label>
-   <select name="Temperature Maximal" v-model="TempMax" class="temp">
-    <option value="7">7</option>
-    <option value="10">10</option>
-    <option value="12">12</option>
-   </select>
-   <button class="frigo_button" v-on:click="AddAlarm">Ajout Alarme</button>
-   <button class="frigo_button" v-on:click="removeAlarm">Supprimer Alarmes</button> -->
+   <button class="btn btn-outline-warning" v-on:click="AddCard">Ajout carte RFID</button>
+   <button class="btn btn-outline-danger" v-on:click="OpenTheBox">Ouverture à distance</button>
    <hr>
+   <h3> Température alarme :</h3>
+  <span class="input-group mb-3">
+    <span class="input-group-prepend">
+      <label class="input-group-text" for="inputGroupSelect01">Min</label>
+    </span>
+    <select class="custom-select" id="inputGroupSelect01">
+      <option selected>Choose...</option>
+      <option value="0">0</option>
+      <option value="1">1</option>
+      <option value="2">2</option>
+    </select>
+    <span class="input-group-prepend">
+      <label class="input-group-text" for="inputGroupSelect01">Max</label>
+    </span>
+    <select class="custom-select" id="inputGroupSelect01">
+      <option selected>Choose...</option>
+      <option value="8">8</option>
+      <option value="9">9</option>
+      <option value="10">10</option>
+    </select>
+   <button class="btn btn-outline-info" v-on:click="AddAlarm">Ajout Alarme</button>
+  </span>
+   <hr>
+  <table class="table table-dark">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Start</th>
+        <th scope="col">End</th>
+        <th scope="col">Remove</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">1</th>
+        <td>0°</td>
+        <td>7°</td>
+        <td><button class="btn btn-outline-danger" v-on:click="removeAlarm">Remove</button></td>
+      </tr>
+    </tbody>
+  </table>
   </div>
 </template>
 <style scoped>

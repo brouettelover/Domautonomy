@@ -3,7 +3,6 @@ import LoginView from '@/views/home/LoginView.vue'
 import RegisterView from '@/views/home/RegisterView.vue'
 import LostView from '@/views/home/LostView.vue'
 import DashboardView from '@/views/modules/DashboardView.vue'
-import AddModuleView from '@/views/modules/AddModuleView.vue'
 import InformationView from '@/views/modules/users/InformationView.vue'
 import setAuthHeader from '@/utils/setAuthHeader'
 
@@ -27,14 +26,6 @@ const routes = [
     path: '/dashboard',
     name: 'dashboard',
     component: DashboardView,
-    meta: {
-      requiresAuth: true
-    }
-  },
-  {
-    path: '/module/add',
-    name: 'module',
-    component: AddModuleView,
     meta: {
       requiresAuth: true
     }

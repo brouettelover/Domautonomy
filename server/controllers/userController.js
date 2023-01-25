@@ -91,10 +91,10 @@ async function loginRoute(req, res) {
 }
 
 
-exports.registerNewUser = async (req, res) => {};
-exports.loginUser = async (req, res) => {};
-exports.getUserDetails = async (req, res) => {};
-exports.removeUser = async (req, res) => {};
+exports.registerNewUser = async (req, res) => {}
+exports.loginUser = async (req, res) => {}
+exports.getUserDetails = async (req, res) => {}
+exports.removeUser = async (req, res) => {}
 
 //méthode d'enregistrement d'un utilisateur
 exports.registerNewUser = async (req, res) => {

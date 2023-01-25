@@ -13,12 +13,13 @@
     <button type="submit" class="button_sub">Login</button>
     <span class="psw"><a href="/lost">Mot de passe oublié?</a></span>
     <span class="register"><a href="/register">S'enregistrer</a></span>
+    <span class="devblog"><a href="https://arthurdraye.xyz">Blog</a></span>
   </div>
 
 </form>
 </template>
-<style>
-  @import '@/assets/css/login.sass';
+<style scoped>
+  @import '@/assets/css/login.css';
 </style>
 
 <script>

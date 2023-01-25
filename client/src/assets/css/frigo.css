@@ -1,42 +1,32 @@
 #frigo_main {
     position: relative;
-    top: 5rem;
-    left: 2rem;
+    margin: 1rem;
+    border: 5px solid;
+    border-radius: 30px;
+    padding: 5px;
+    text-align: left;
+    background-color: rgba(249, 250, 240, 0.822);
+    border-color: rgb(45, 127, 190);
     
   }
-
+.btn {
+    margin-right: 5px;
+}
 #frigo_main h1 {
-    color: rgb(148, 139, 101);
+    color: rgb(45, 127, 190);
 }
 
-.frigo_button{
-    margin: 1em;
-    width: 7rem;
-    height: 3rem;
-    text-align: center;
-    background-color: beige;
-    font-family:Verdana, Geneva, Tahoma, sans-serif;
-    font-weight: 900;
-    border-radius: 5%;
+.input-group-text {
+    margin-left: -3px;
+    margin-right: -4px;
+    z-index: 2;
 }
-
-.frigo_button:hover{
-    background-color: blanchedalmond;
+.custom-select {
+    z-index: 3;
 }
-
-.temp {
-    top: 10rem;
-    padding: 0;
-    margin: 1em;
-    width: 7rem;
-    height: 3rem;
-    text-align: left;
-
-}
-
 
 #metrics{
-     color: rgb(99, 81, 81);
+     color: rgb(23, 23, 77);
      font-weight: 800;
      right: 5rem;
 }

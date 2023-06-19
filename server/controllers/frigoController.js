@@ -16,11 +16,11 @@ exports.AlarmTempHum = async (req, res) => {}
 exports.RemoveAlarmTempHum = async (req, res) => {}
 
 const options = {
-    clientId: `mqtt_${Math.random().toString(16).slice(3)}`,
+    /*clientId: `mqtt_${Math.random().toString(16).slice(3)}`,
     clean: true,
-    key: fs.readFileSync('./certs/mqtt_cert/client.key'),
-    cert: fs.readFileSync('./certs/mqtt_cert/client.crt'),
-    ca: [ fs.readFileSync('./certs/mqtt_cert/ca.crt') ]
+    key: fs.readFileSync('./certs/mqtt_cert/client_node.key'),
+    cert: fs.readFileSync('./certs/mqtt_cert/client_node.crt'),
+    ca: [ fs.readFileSync('./certs/mqtt_cert/ca.crt') ]*/
   }
 
 const client = mqtt.connect('mqtts://localhost:8883', options);

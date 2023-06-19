@@ -41,11 +41,12 @@ mongoose
     winston.info("Database is connected")
   })
   .catch(err => {
-    winston.err({ database_error: err})
+    console.log(params.DATABASECONNECTION)
+    console.error(err)
   });
   
 app.use(cors({
-  origin: ['https://domautonomy.one', 'https://192.168.0.150'],
+  origin: ['https://domautonomy.one', 'https://192.168.0.150', 'https://127.0.0.1','https://192.168.0.100'],
   methods: ['GET', 'POST', 'PUT'],
   allowedHeaders: ['Content-Type', 'Authorization','x-access-token','Access-Control-Allow-Origin']
 }))

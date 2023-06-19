@@ -1,0 +1,18 @@
+# Ignorer tous les fichiers et dossiers qui commencent par un point
+.*
+
+# Ignorer tous les fichiers .log
+*.log
+
+# Ne pas ignorer le fichier .gitignore lui-même
+!.gitignore
+
+# Ignorer les dossiers cert_broker
+/cert_broker/
+
+# Ignore les sous dossiers
+*/certs/
+*/cert/
+*/*/mqtt_certs/
+*/node_modules/
+*/logs/

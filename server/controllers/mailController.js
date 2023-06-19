@@ -33,6 +33,18 @@ exports.sendRegisterMail = (email, username) => {
 
 }
 
+exports.sendAlarmFlotteur = (email, temperature) => {
+    transporter.sendMail({
+        from: '"Project autonomy" <project.autonomy.app@gmail.com>', // sender address
+        to: email, // list of receivers
+        subject: "Alarme Flotteur / manque d'eau", // Subject line
+        text: "Il manque de l'eau pour faire fonctionner la pompe, ajoutez de l'eau.", // plain text body
+        html: "Il manque de l'eau pour faire fonctionner la pompe, ajoutez de l'eau.", // html body
+    }).then(info => {
+        winston.info({info});
+    }).catch(console.error);
+}
+
 exports.sendAlarmTemperatureMail = (email, temperature) => {
     transporter.sendMail({
         from: '"Project autonomy" <project.autonomy.app@gmail.com>', // sender address

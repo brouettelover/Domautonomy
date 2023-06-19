@@ -53,7 +53,7 @@ export default {
           .catch(e => {
             this.$swal('Error', e, 'error')
             console.log(e)
-            this.$swal('Error', 'Un utilisateur existe déjà', 'error')
+            this.$swal('Error', 'Problème d\'Enregistrement', 'error')
           })
       } catch (err) {
         const error = err.response
